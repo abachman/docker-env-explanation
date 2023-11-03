@@ -1,0 +1,12 @@
+{
+  "name": "docker-playground",
+  "version": "1.0.0",
+  "description": "n/a",
+  "main": "index.js",
+  "scripts": {
+    "test": "node --test",
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "MIT"
+}

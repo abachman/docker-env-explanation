@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  # parent image
+  myapp:
+    build:
+      dockerfile: ${DOCKERFILE:-Dockerfile}
+      context: .
+      tags:
+        - 'myapp:latest'
+
+  # demos
+  myapp-none:
+    image: 'myapp:latest'
+  myapp-envfile:
+    image: 'myapp:latest'
+    env_file:
+      - file.env
+  myapp-environment:
+    image: 'myapp:latest'
+    environment:
+      - VAR=docker-compose.yml
+  myapp-environment-passthrough:
+    image: 'myapp:latest'
+    environment:
+      - VAR=${VAR:-docker-compose.yml}
+  myapp-all:
+    image: 'myapp:latest'
+    environment:
+      - VAR=${VAR:-docker-compose.yml}
+    env_file:
+      - file.env
