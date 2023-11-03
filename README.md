@@ -78,19 +78,7 @@ If you see `VAR=$VAR` in an `env_file:` file, or `VAR: $VAR` in a docker-compose
 
 ## Report
 
-Use `demo.sh` to generate this report.
-
-```sh
-./demo.sh
-```
-
-Each entry is four runs of `docker compose run` with the scenarios described by the arguments.
-
-Use `DEBUG=true ./demo.sh` if you want to see the actual commands being run.
-
-```sh
-DEBUG=true ./demo.sh
-```
+I used `demo.sh` to generate this report. Run `brew bundle` to install dependencies used in `demo.sh` and make sure you have `docker compose` installed. This report was generated on a Mac with [Docker Desktop](https://www.docker.com/products/docker-desktop/), version `Docker Compose version v2.23.0-desktop.1`.
 
 ```console
 $ ./demo.sh
@@ -207,4 +195,58 @@ $ ./demo.sh
   --env-file run         arg.env
   run -e                 run -e
   --env-file run -e      run -e
-  ```
+```
+
+### Description
+
+Each entry is four runs of `docker compose run` with the scenarios listed according to the command line arguments passed to `docker compose`, using the service named at the top of each scenario.
+
+So, for example, `Dockerfile with ENV` built an image with a Dockerfile containing `ENV VAR=Dockerfile` and in the `myapp-none` scenario used a service with this definition:
+
+```yaml
+  myapp-none:
+    image: 'myapp:latest'
+```
+
+In the scenario, `docker compose run` was called four times with different combinations of arguments:
+
+```console
+$ docker compose --progress quiet run --rm --no-deps myapp-none
+$ docker compose --progress quiet --env-file=arg.env run --rm --no-deps myapp-none
+$ docker compose --progress quiet run --rm --no-deps -e VAR='run -e' myapp-none
+$ docker compose --progress quiet --env-file=arg.env run --rm --no-deps -e VAR='run -e' myapp-none
+```
+
+You can use `DEBUG=true ./demo.sh` if you want to see the actual commands being run.
+
+```console
+$ DEBUG=true ./demo.sh
+
+╔═════════════════════════════╗
+║                             ║
+║     Dockerfile with ENV     ║
+║                             ║
+╚═════════════════════════════╝
+
+┌────────────────────┐
+│                    │
+│     myapp-none     │
+│                    │
+└────────────────────┘
+$ docker compose --progress quiet run --rm --no-deps myapp-none
+  run                    Dockerfile
+$ docker compose --progress quiet --env-file=arg.env run --rm --no-deps myapp-none
+  --env-file run         Dockerfile
+$ docker compose --progress quiet run --rm --no-deps -e VAR='run -e' myapp-none
+  run -e                 run -e
+$ docker compose --progress quiet --env-file=arg.env run --rm --no-deps -e VAR='run -e' myapp-none
+  --env-file run -e      run -e
+
+┌───────────────────────┐
+│                       │
+│     myapp-envfile     │
+│                       │
+└───────────────────────┘
+
+# etc...
+```
