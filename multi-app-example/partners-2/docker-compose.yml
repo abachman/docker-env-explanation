@@ -1,0 +1,9 @@
+version: '2.3'
+
+name: 'partners'
+
+services:
+  partners-2:
+    image: 'alpine:latest'
+    command: /bin/sh -c "echo \"partnership-2! VAR=$${VAR}\"" 
+    env_file: docker.env
