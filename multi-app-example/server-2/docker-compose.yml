@@ -1,0 +1,10 @@
+version: '2.3'
+
+name: 'server'
+
+services:
+  server:
+    image: 'alpine:latest'
+    command: /bin/sh -c "echo \"service! VAR=$${VAR}\"" 
+    environment: 
+      VAR: ${FOR_BUILD:-intentionally_unset}

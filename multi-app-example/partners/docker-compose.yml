@@ -6,4 +6,4 @@ services:
   partners:
     image: 'alpine:latest'
     command: /bin/sh -c "echo \"partnership! VAR=$${VAR}\"" 
-    env_file: docker-development.env
+    env_file: ${PARTNERS_ROOT_PATH:-.}/docker-development.env

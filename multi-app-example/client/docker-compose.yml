@@ -6,4 +6,4 @@ services:
   client:
     image: 'alpine:latest'
     command: /bin/sh -c "echo \"clientage! VAR=$${VAR}\"" 
-    env_file: docker.env
+    env_file: ${CLIENT_ROOT_PATH:-.}/docker.env

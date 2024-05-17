@@ -156,3 +156,85 @@ services:
     environment:
       VAR: unset
 ```
+
+# SOLUTIONS
+
+## Solution 1: Absolute Paths for `env_file`
+
+The solution to all three problems is to use absolute paths for `env_file` keys in `docker-compose.yml` files.
+
+```yaml
+# in client/docker-compose.yml
+  client: 
+    env_file: ${CLIENT_ROOT_PATH}/docker.env
+
+# in partners/docker-compose.yml
+  partners:
+    env_file: ${PARTNERS_ROOT_PATH}/docker-development.env
+
+# in partners-2/docker-compose.yml
+  partners-2:
+    env_file: ${PARTNERS2_ROOT_PATH}/docker.env
+```
+
+Then, set the `*_ROOT_PATH` environment variables in the shell before running `docker compose`.
+
+```console
+$ CLIENT_ROOT_PATH=$(pwd)/client PARTNERS_ROOT_PATH=$(pwd)/partners PARTNERS2_ROOT_PATH=$(pwd)/partners-2 \
+  docker compose \
+    -f server/docker-compose.yml \
+    -f client/docker-compose.yml \
+    -f partners/docker-compose.yml \
+    -f partners-2/docker-compose.yml \
+    config
+```
+
+This fixes the named `env_file` problem (Problem 1) and environment bleed (Problem 2) between services, but doesn't fix the automatic `.env` file problem (Problem 3).
+
+## Solution 2: Top-level docker-compose.yml with `include` keys
+
+An alternative solution is to create a top-level `docker-compose.yml` file that includes the other `docker-compose.yml` files and sets `project_directory` for each explicitly, relative to itself. [This feature of docker compose is documented here](https://docs.docker.com/compose/compose-file/14-include/#env_file).
+
+```yaml
+# docker-compose.combined.yml
+version: '2.3'
+
+include: 
+  - path: ./client/docker-compose.yml
+    project_directory: ./client
+  - path: ./partners/docker-compose.yml
+    project_directory: ./partners
+  - path: ./partners-2/docker-compose.yml
+    project_directory: ./partners-2
+  - path: ./server/docker-compose.yml
+    project_directory: ./server
+```
+
+```console
+$ docker compose -f docker-compose.combined.yml config
+
+services:
+  client:
+    environment:
+      VAR: clientage
+  partners:
+    environment:
+      VAR: partnership
+  partners-2:
+    environment:
+      VAR: partnership-2
+  server:
+    environment:
+      VAR: .env
+```
+
+And running every service, we see the same output as if we ran them separately.
+
+```console
+$ docker compose -f docker-compose.combined.yml up
+
+partners-1    | partnership! VAR=partnership
+partners-2-1  | partnership-2! VAR=partnership-2
+server-1      | service! VAR=.env
+client-1      | clientage! VAR=clientage
+```

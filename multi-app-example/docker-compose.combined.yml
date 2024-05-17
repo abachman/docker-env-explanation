@@ -1,0 +1,11 @@
+version: '2.3'
+
+include:
+  - path: ./client/docker-compose.yml
+    project_directory: ./client
+  - path: ./partners/docker-compose.yml
+    project_directory: ./partners
+  - path: ./partners-2/docker-compose.yml
+    project_directory: ./partners-2
+  - path: ./server/docker-compose.yml
+    project_directory: ./server
