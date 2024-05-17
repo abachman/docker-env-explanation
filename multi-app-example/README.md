@@ -42,7 +42,7 @@ When a service defined in a `docker-compose.yml` file includes an `env_file` key
 In this example project, the `client` service in `client/docker-compose.yml` includes an `env_file` key. If client is listed before server, every command fails.
 
 ```console
-$ docker compose -f client/docker-compose.yml -f server/docker-compose.yml config
+$ docker compose  -f server/docker-compose.yml -f client/docker-compose.yml config
 env file .../server/docker.env not found: stat .../server/docker.env: no such file or directory
 ```
 
