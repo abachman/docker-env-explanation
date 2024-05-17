@@ -1,3 +1,14 @@
+<!-- npx markdown-toc README.md -->
+- [Understanding Docker Compose Environment Variables](#understanding-docker-compose-environment-variables)
+  * [Which environment are we talking about?](#which-environment-are-we-talking-about)
+      - [host ENV vars](#host-env-vars)
+      - [container ENV vars](#container-env-vars)
+  * [Report](#report)
+    + [Description](#description)
+  * [Running Multiple docker compose projects together](#running-multiple-docker-compose-projects-together)
+
+# Understanding Docker Compose Environment Variables
+
 Trying to wrap my head around docker-compose environment variables.
 
 ref: https://docs.docker.com/compose/environment-variables/envvars-precedence/
@@ -250,3 +261,7 @@ $ docker compose --progress quiet --env-file=arg.env run --rm --no-deps -e VAR='
 
 # etc...
 ```
+
+## Running Multiple docker compose projects together 
+
+[See the example projects in ./multi-app-example](./multi-app-example/README.md).
