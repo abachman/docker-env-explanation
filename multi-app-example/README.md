@@ -2,6 +2,9 @@
   * [Problem 1 - Order of Config Files with `-f`](#problem-1---order-of-config-files-with--f)
   * [Problem 2 - Environment Bleed](#problem-2---environment-bleed)
   * [Problem 3 - Automatic .env failure](#problem-3---automatic-env-failure)
+- [SOLUTIONS](#solutions)
+  * [Solution 1: Absolute Paths for `env_file`](#solution-1-absolute-paths-for-env_file)
+  * [Solution 2: Top-level docker-compose.yml with `include` keys](#solution-2-top-level-docker-composeyml-with-include-keys)
 
 # Multiple docker compose configurations
 
