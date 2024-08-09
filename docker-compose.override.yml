@@ -1,0 +1,8 @@
+version: '3'
+
+services: 
+  myapp-envfile-absolute: 
+    env_file: &absenv
+      - ${PROJECT_PATH}/file-3.env
+  myapp-environment: 
+    env_file: *absenv

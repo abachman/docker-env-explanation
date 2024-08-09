@@ -265,3 +265,60 @@ $ docker compose --progress quiet --env-file=arg.env run --rm --no-deps -e VAR='
 ## Running Multiple docker compose projects together 
 
 [See the example projects in ./multi-app-example](./multi-app-example/README.md).
+
+## Env File Paths 
+
+Given a configuration like this: 
+
+```yaml
+  myapp-envfile:
+    image: 'myapp:latest'
+    env_file:
+      - file.env
+```
+
+How does `docker compose` know where `file.env` is located?
+
+We know running `docker compose up myapp-envfile` will fail if `file.env` is not in the same directory as the `docker-compose.yml` file.
+
+```console
+#
+# ./docker-env-explanation
+#   docker-compose.yml
+#   config/
+#     file.env
+#
+
+~/docker-env-explanation $ docker compose up myapp-envfile
+env file ~/docker-env-explanation/file.env not found: stat ~/docker-env-explanation/file.env: no such file or directory
+```
+
+But what if we have the files in the same folder but launch docker-compose from a different directory?
+
+```console
+#
+# ./docker-env-explanation
+#   docker-compose.yml
+#   file.env
+#
+
+~/ $ docker compose -f docker-env-explanation/docker-compose.yml up myapp-envfile
+env file ~/file.env not found: stat ~/file.env: no such file or directory
+```
+
+`docker compose` will look for `file.env` in the current working directory from which it was launched, not the directory of the `docker-compose.yml` file.
+
+To specify the path to the `env_file:` attribute, we can use an environment variable containing the path to the project's working directory:
+
+```yaml
+  myapp-envfile:
+    image: 'myapp:latest'
+    env_file:
+      - ${PROJECT_PATH}/file.env
+```
+
+And then set the environment variable in the shell before running `docker compose`:
+
+```console
+~/ $ PROJECT_PATH=~/docker-env-explanation docker compose -f docker-env-explanation/docker-compose.yml up myapp-envfile
+```

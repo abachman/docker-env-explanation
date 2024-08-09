@@ -1,4 +1,4 @@
-FROM node:lts-iron
+FROM node:lts-alpine
 
 ENV VAR=Dockerfile
 WORKDIR /app

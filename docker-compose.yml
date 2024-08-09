@@ -16,10 +16,16 @@ services:
     image: 'myapp:latest'
     env_file:
       - file.env
+  myapp-envfile-absolute:
+    image: 'myapp:latest'
+    env_file: &absenv
+      - ${PROJECT_PATH}/file.env
+      - ${PROJECT_PATH}/file-2.env
   myapp-environment:
     image: 'myapp:latest'
     environment:
       - VAR=docker-compose.yml
+    env_file: *absenv
   myapp-environment-passthrough:
     image: 'myapp:latest'
     environment:
